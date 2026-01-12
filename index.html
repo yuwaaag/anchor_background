@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Master Virtual Studio - 5 Premium Sets</title>
+    <title>Master Virtual Studio - Final Secure Version</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; }
 
@@ -10,15 +10,12 @@
         #studio-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-size: cover; background-position: center;
-            transition: all 1.2s ease-in-out; z-index: 1;
+            transition: all 1s ease-in-out; z-index: 1;
         }
 
-        /* 2. एंकर लेयर (OBS में Chroma Key के बाद एंकर यहाँ दिखेगा) */
-        #anchor-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
-
-        /* 3. 3D न्यूज़ डेस्क (Table Foreground) */
+        /* 3. न्यूज़ मेज (Foreground Desk) */
         #studio-desk {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 45%;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 42%;
             background-size: contain; background-repeat: no-repeat; background-position: bottom center;
             z-index: 3; transition: all 1s ease-in-out; pointer-events: none;
         }
@@ -28,61 +25,45 @@
 
         .ticker-container { 
             position: absolute; bottom: 20px; left: 2%; width: 96%; height: 75px; 
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
             border-radius: 12px; display: flex; align-items: center; overflow: hidden;
-            border-bottom: 5px solid #FFD700; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border-bottom: 5px solid #FFD700; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .ticker-label { background: linear-gradient(to bottom, #ff0000, #b30000); color: #fff; padding: 0 25px; font-weight: 900; font-size: 26px; height: 100%; display: flex; align-items: center; }
-        .ticker-text { color: #fff; font-size: 32px; font-weight: bold; flex-grow: 1; overflow: hidden; }
-        .ticker-text p { display: inline-block; padding-left: 100%; animation: scroll 18s linear infinite; margin: 0; }
+        .ticker-label { background: linear-gradient(to right, #ff0000, #990000); color: #fff; padding: 0 25px; font-weight: 900; font-size: 26px; height: 100%; display: flex; align-items: center; }
+        .ticker-text { color: #fff; font-size: 32px; flex-grow: 1; overflow: hidden; white-space: nowrap; }
+        .ticker-text p { display: inline-block; padding-left: 100%; animation: scroll 20s linear infinite; margin: 0; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        .name-tag { position: absolute; top: 72%; left: 5%; background: linear-gradient(to right, #FFD700, #ffcc00); color: #000; padding: 10px 35px; font-size: 24px; font-weight: bold; border-radius: 4px; box-shadow: 0 5px 20px rgba(0,0,0,0.6); border-left: 8px solid #000; }
+        .name-tag { position: absolute; top: 72%; left: 5%; background: #FFD700; color: #000; padding: 10px 30px; font-size: 24px; font-weight: bold; border-radius: 5px; border-left: 10px solid #000; }
 
-        #studio-logo { position: absolute; top: 30px; right: 40px; width: 170px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        #studio-logo { position: absolute; top: 30px; right: 40px; width: 160px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
 
-        /* --- 5 प्रीमियम स्टूडियो थीम्स --- */
-        
-        /* Studio 1: Global Blue (International Look) */
-        .studio-1 #studio-bg { background-image: url('https://i.imgur.com/vHExlR3.jpg'); } 
-        .studio-1 #studio-desk { background-image: url('https://i.imgur.com/83pY64m.png'); }
+        /* थीम्स - इमेजेस को डायरेक्ट और स्टेबल रखा है */
+        .studio-1 #studio-bg { background-image: url('https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg'); }
+        .studio-1 #studio-desk { background-image: url('https://raw.githubusercontent.com/yuwaaag/logo/main/desk1.png'); }
 
-        /* Studio 2: Tech Red (Modern/Fast News) */
-        .studio-2 #studio-bg { background-image: url('https://i.imgur.com/8N690pB.jpg'); } 
-        .studio-2 #studio-desk { background-image: url('https://i.imgur.com/M6L2M7C.png'); }
-
-        /* Studio 3: Virtual Glass (Debate/Talk Show) */
-        .studio-3 #studio-bg { background-image: url('https://i.imgur.com/YmR6G0J.jpg'); } 
-        .studio-3 #studio-desk { background-image: url('https://i.imgur.com/Z3qQW6b.png'); }
-
-        /* Studio 4: Election Special (Dynamic & Large) */
-        .studio-4 #studio-bg { background-image: url('https://i.imgur.com/7Yf09Gf.jpg'); } 
-        .studio-4 #studio-desk { background-image: url('https://i.imgur.com/9lqY7vE.png'); }
-
-        /* Studio 5: Night City (Prime Time Style) */
-        .studio-5 #studio-bg { background-image: url('https://i.imgur.com/w9N9I1n.jpg'); } 
-        .studio-5 #studio-desk { background-image: url('https://i.imgur.com/p9v8R7G.png'); }
+        .studio-2 #studio-bg { background-image: url('https://images.pexels.com/photos/395196/pexels-photo-395196.jpeg'); }
+        .studio-2 #studio-desk { background-image: url('https://raw.githubusercontent.com/yuwaaag/logo/main/desk2.png'); }
 
     </style>
 </head>
 <body class="studio-1">
 
     <div id="studio-bg"></div>
-    <div id="anchor-area"></div>
     <div id="studio-desk"></div>
 
     <div class="overlay-layer">
         <img id="studio-logo" src="https://raw.githubusercontent.com/yuwaaag/logo/main/ptnlogo.png">
-        <div id="anchor-name" class="name-tag">NEWS ANCHOR</div>
+        <div id="anchor-name" class="name-tag">LOADING...</div>
         <div class="ticker-container">
             <div class="ticker-label">BREAKING</div>
-            <div class="ticker-text"><p id="ticker-content">Initializing High-End Virtual Studio Assets...</p></div>
+            <div class="ticker-text"><p id="ticker-content">Connecting to News Feed...</p></div>
         </div>
     </div>
 
     <script>
-        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS5PlH4n2B1wMI-FpWb0udrmm8ZIgr-8G27eb-N8BOR-FvxFKwg_BD7NtpbYtj9_ZY8tgS6bxB6iizu/pub?gid=0&single=true&output=csv';
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS5PlH4n2B1wMI-FpWb0udrmm8ZIgr-8G27eb-N8BOR-FvxFKwg_BD7NtpbYtj9_ZY8tgS6bxB6iizu/pub?gid=0&single=true&output=csv'; // अपनी Google Sheet का CSV लिंक यहाँ डालें
         let lastData = "";
 
         async function updateStudio() {
@@ -92,20 +73,33 @@
                 if (data === lastData) return;
                 lastData = data;
 
-                const col = data.split('\n')[0].split(',');
+                const lines = data.split('\n');
+                const col = lines[0].split(',');
 
-                // Column A: News, Column B: Name
-                document.getElementById('ticker-content').innerText = col[0].replace(/"/g, "");
-                document.getElementById('anchor-name').innerText = col[1].replace(/"/g, "");
+                // EMERGENCY RESET CHECK (Column H - Index 7)
+                const emergency = col[7] ? col[7].replace(/"/g, "").trim() : "NORMAL";
+                
+                if (emergency === "RESET") {
+                    document.body.className = "studio-1";
+                    document.getElementById('ticker-content').innerText = "तकनीकी सुधार जारी है... कृपया प्रतीक्षा करें।";
+                    document.getElementById('anchor-name').innerText = "SYSTEM RESET";
+                    return;
+                }
 
-                // Column G: Studio Mode (1, 2, 3, 4, 5)
+                // Normal Updates
+                document.getElementById('ticker-content').innerText = col[0].replace(/"/g, ""); // Column A
+                document.getElementById('anchor-name').innerText = col[1].replace(/"/g, ""); // Column B
+
+                // Studio Selection (Column G - Index 6)
                 const studioNum = col[6] ? col[6].replace(/"/g, "").trim() : "1";
                 document.body.className = "studio-" + studioNum;
 
-            } catch (e) { console.log("Sync error..."); }
+            } catch (e) { 
+                console.log("Syncing Error: ", e); 
+            }
         }
 
-        setInterval(updateStudio, 4000);
+        setInterval(updateStudio, 3000);
         updateStudio();
     </script>
 </body>

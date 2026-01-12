@@ -2,97 +2,100 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>PTN News - Stable Studio</title>
+    <title>PTN Smart News Studio</title>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #000; }
-        #studio-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; transition: opacity 1s; z-index: 1; }
-        #studio-desk { position: absolute; bottom: 0; left: 0; width: 100%; height: 42%; background-size: contain; background-repeat: no-repeat; background-position: bottom center; z-index: 3; }
+        
+        /* बैकग्राउंड लेयर */
+        #studio-bg { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-size: cover; background-position: center; 
+            transition: opacity 1s; z-index: 1; 
+        }
+
+        /* न्यूज़ मेज (Desk) - अगर इमेज न मिले तो यह गायब रहेगी */
+        #studio-desk { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 42%; 
+            background-size: contain; background-repeat: no-repeat; 
+            background-position: bottom center; z-index: 3; 
+        }
+
+        /* ग्राफिक्स लेयर */
         .overlay-layer { position: absolute; width: 100%; height: 100%; z-index: 100; pointer-events: none; }
         
         .ticker-container { 
             position: absolute; bottom: 20px; left: 2%; width: 96%; height: 75px; 
-            background: rgba(0,0,0,0.9); display: flex; align-items: center; overflow: hidden; 
-            border-bottom: 5px solid #FFD700; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.9); display: flex; align-items: center; 
+            overflow: hidden; border-bottom: 5px solid #FFD700; 
         }
+        
         .ticker-label { background: #ff0000; color: #fff; padding: 0 25px; font-weight: 900; font-size: 26px; height: 100%; display: flex; align-items: center; z-index: 10; }
-        .ticker-text-box { flex-grow: 1; overflow: hidden; white-space: nowrap; position: relative; height: 100%; display: flex; align-items: center; }
         
         #ticker-content { 
             display: inline-block; padding-left: 100%; color: #fff; font-size: 32px; 
-            margin: 0; white-space: nowrap; will-change: transform;
-            animation: scroll-text 20s linear infinite; 
+            white-space: nowrap; animation: scroll-text 18s linear infinite; 
         }
 
-        @keyframes scroll-text {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
+        @keyframes scroll-text { 0% { transform: translateX(0); } 100% { transform: translateX(-250%); } }
 
-        .name-tag { position: absolute; top: 72%; left: 5%; background: #FFD700; color: #000; padding: 10px 30px; font-size: 24px; font-weight: bold; border-radius: 5px; box-shadow: 3px 3px 10px rgba(0,0,0,0.3); }
+        .name-tag { position: absolute; top: 72%; left: 5%; background: #FFD700; color: #000; padding: 10px 30px; font-size: 24px; font-weight: bold; border-radius: 5px; }
         #studio-logo { position: absolute; top: 30px; right: 40px; width: 160px; }
-
-        .studio-1 #studio-bg { background-image: url('https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg'); }
-        .studio-1 #studio-desk { background-image: url('https://raw.githubusercontent.com/yuwaaag/logo/main/desk1.png'); }
-
-        .studio-2 #studio-bg { background-image: url('https://images.pexels.com/photos/395196/pexels-photo-395196.jpeg'); }
-        .studio-2 #studio-desk { background-image: url('https://raw.githubusercontent.com/yuwaaag/logo/main/desk2.png'); }
     </style>
 </head>
-<body class="studio-1">
+<body>
+
     <div id="studio-bg"></div>
     <div id="studio-desk"></div>
+
     <div class="overlay-layer">
         <img id="studio-logo" src="https://raw.githubusercontent.com/yuwaaag/logo/main/ptnlogo.png">
         <div id="anchor-name" class="name-tag">PTN NEWS</div>
         <div class="ticker-container">
             <div class="ticker-label">BREAKING</div>
-            <div class="ticker-text-box">
-                <p id="ticker-content">Initializing News Stream...</p>
-            </div>
+            <div style="flex-grow:1; overflow:hidden;"><p id="ticker-content">Updating Studio...</p></div>
         </div>
     </div>
 
     <script>
-        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS5PlH4n2B1wMI-FpWb0udrmm8ZIgr-8G27eb-N8BOR-FvxFKwg_BD7NtpbYtj9_ZY8tgS6bxB6iizu/pub?gid=0&single=true&output=csv'; 
-        let currentNews = "";
-        let currentName = "";
-        let currentStudio = "";
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS5PlH4n2B1wMI-FpWb0udrmm8ZIgr-8G27eb-N8BOR-FvxFKwg_BD7NtpbYtj9_ZY8tgS6bxB6iizu/pub?gid=0&single=true&output=csv';
+        const gitPath = 'https://raw.githubusercontent.com/yuwaaag/logo/main/';
+        let lastStudio = "";
 
-        async function updateData() {
+        async function updateStudio() {
             try {
-                const res = await fetch(`${sheetURL}&cb=${new Date().getTime()}`);
-                const csvData = await res.text();
-                const rows = csvData.split('\n');
-                if (rows.length < 1) return;
+                const res = await fetch(`${sheetURL}&cb=${Date.now()}`);
+                const data = await res.text();
+                const col = data.split('\n')[0].split(',');
 
-                const col = rows[0].split(',');
+                // 1. टेक्स्ट अपडेट (पट्टी और नाम)
+                document.getElementById('ticker-content').innerText = col[0].replace(/"/g, "");
+                document.getElementById('anchor-name').innerText = col[1].replace(/"/g, "");
+
+                // 2. स्टूडियो सिलेक्शन
+                const studioNum = col[6] ? col[6].replace(/"/g, "").trim() : "1";
                 
-                const newNews = col[0].replace(/"/g, "").trim();
-                const newName = col[1].replace(/"/g, "").trim();
-                const newStudio = col[6] ? col[6].replace(/"/g, "").trim() : "1";
-
-                // अगर न्यूज़ बदली है तभी अपडेट करें (ताकि पट्टी न गायब हो)
-                if (newNews !== currentNews) {
-                    currentNews = newNews;
-                    document.getElementById('ticker-content').innerText = currentNews;
+                if (studioNum !== lastStudio) {
+                    lastStudio = studioNum;
+                    
+                    // बैकग्राउंड बदलें
+                    document.getElementById('studio-bg').style.backgroundImage = `url('${gitPath}bg${studioNum}.jpg')`;
+                    
+                    // डेस्क इमेज चेक करें (अगर इमेज लोड नहीं होती तो छुपा दें)
+                    const deskImg = new Image();
+                    deskImg.src = `${gitPath}desk${studioNum}.png`;
+                    deskImg.onload = () => {
+                        document.getElementById('studio-desk').style.backgroundImage = `url('${deskImg.src}')`;
+                        document.getElementById('studio-desk').style.display = "block";
+                    };
+                    deskImg.onerror = () => {
+                        document.getElementById('studio-desk').style.display = "none";
+                    };
                 }
-
-                if (newName !== currentName) {
-                    currentName = newName;
-                    document.getElementById('anchor-name').innerText = currentName;
-                }
-
-                if (newStudio !== currentStudio) {
-                    currentStudio = newStudio;
-                    document.body.className = "studio-" + currentStudio;
-                }
-
-            } catch (e) { console.error("Sync Error"); }
+            } catch (e) { console.log("Syncing..."); }
         }
 
-        // डेटा चेक करने का समय थोड़ा बढ़ा दिया है ताकि सर्वर पर लोड न हो
-        setInterval(updateData, 5000); 
-        updateData();
+        setInterval(updateStudio, 4000);
+        updateStudio();
     </script>
 </body>
 </html>
